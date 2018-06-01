@@ -2,23 +2,23 @@
 
 CryptoStrikers is composed of 4 public facing contracts. Below we'll provide an overview of each.
 
-##### StrikersCore.sol - `address`
+##### StrikersCore.sol - `0x453659562695ee39bD3Bd9e2AFD3db1BD9901Db3`
 
 Our main, ERC721-compliant contract that brings everything together. It handles card ownership, minting, and peer-to-peer trading.
 
-##### StrikersPackSale.sol - `address`
+##### StrikersPackSale.sol - `0x882Df83CC4Ae454Fbe0EF0e6b4F7e270A21bad90`
 
 The contract that allows users to purchase packs of CryptoStrikers cards. Also manages our whitelist and referral programs.
 
-##### StrikersChecklist.sol - `address`
+##### StrikersChecklist.sol - `0x77fd1480eb40CB1386aAF7Dca0bed41D705256af`
 
 Governs which players and cards are available in our universe, and enforces scarcity limits.
 
-##### StrikersMetadata.sol - `address`
+##### StrikersMetadata.sol - `0x91253D57997abA025fdAe254f6cbe1577A277605`
 
-An upgradeable metadata contract, which right now we use to conform to [OpenSea's spec](https://docs.opensea.io/docs/2-adding-metadata).
+An upgradeable metadata contract, which right now points to an endpoint that returns JSON conforming to [OpenSea's spec](https://docs.opensea.io/docs/2-adding-metadata).
 
-## Super High Level Stuff
+# Super High Level Stuff
 
 - You can buy packs (duh).
 - There are 2 kinds of packs: Standard and Premium.
