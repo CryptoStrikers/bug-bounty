@@ -22,7 +22,7 @@ Help us identify bugs, vulnerabilities, and exploits in the smart contract such 
 
 ### Rules & Rewards:
 
-- Issues that have already been submitted by another user or are already known to the CryptoStrikers team are not eligible for bounty rewards. For example, [this](https://github.com/CryptoStrikers/bug-bounty/blob/7896573c305c46b61413dd4cbb5009caa32ffff0/contracts/StrikersReferral.sol#L87) should be a < instead of <=... We just caught it this morning!
+- Issues that have already been submitted by another user or are already known to the CryptoStrikers team are not eligible for bounty rewards.
 - Bugs and vulnerabilities should only be found using accounts you own and create. Please respect third party applications and understand that an exploit that is not specific to a CryptoStrikers smart contract is not part of the bounty program. Attacks on the network that result in bad behaviour are not allowed.
 - Don’t perform any attack that could harm the reliability/integrity of our website, services or data (e.g., DDoS/spam attacks are **not** allowed!).
 - The CryptoStrikers website is not part of the bounty program, only the smart contract code included in this repo.
