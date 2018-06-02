@@ -16,7 +16,7 @@ contract StrikersCore is StrikersTrading {
   }
 
   /// @dev Allows the contract owner to update the metadata contract.
-  function setMetadataContract(address _contractAddress) external onlyOwner {
+  function setMetadataAddress(address _contractAddress) external onlyOwner {
     strikersMetadata = StrikersMetadata(_contractAddress);
   }
 
