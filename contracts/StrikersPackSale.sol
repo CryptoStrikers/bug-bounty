@@ -39,7 +39,7 @@ contract StrikersPackSale is StrikersReferral {
   /// @param _referrer The user who invited msg.sender to CryptoStrikers.
   /// @param _premium True if we're buying from Premium sale, false if we're buying from Standard sale.
   function buyFirstPackFromReferral(address _referrer, bool _premium) external payable {
-    require(packsBought[msg.sender] == 0, "Only attribute a referrer on a user's first purchase.");
+    require(packsBought[msg.sender] == 0, "Only assign a referrer on a user's first purchase.");
     referrers[msg.sender] = _referrer;
     buyPackWithETH(_premium);
   }

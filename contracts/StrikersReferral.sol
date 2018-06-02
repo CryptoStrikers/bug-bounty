@@ -84,9 +84,9 @@ contract StrikersReferral is StrikersWhitelist {
     uint16 attributedSales = referralSaleCount[msg.sender];
     uint8 cardsClaimed = bonusCardsClaimed[msg.sender];
     require(attributedSales > cardsClaimed, "You have no unclaimed bonus cards.");
-    require(cardsClaimed <= bonusCards.length, "You have claimed all the bonus cards.");
-    uint8 bonusCardChecklistId = bonusCards[cardsClaimed];
+    require(cardsClaimed < bonusCards.length, "You have claimed all the bonus cards.");
     bonusCardsClaimed[msg.sender]++;
+    uint8 bonusCardChecklistId = bonusCards[cardsClaimed];
     mintingContract.mintPackSaleCard(bonusCardChecklistId, msg.sender);
   }
 
