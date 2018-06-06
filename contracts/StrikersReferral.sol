@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 import "./StrikersWhitelist.sol";
 
@@ -7,7 +7,7 @@ import "./StrikersWhitelist.sol";
 contract StrikersReferral is StrikersWhitelist {
 
   /// @dev A cap for how many free referral packs we are giving away.
-  uint16 public constant MAX_FREE_REFERRAL_PACKS = 1000;
+  uint16 public constant MAX_FREE_REFERRAL_PACKS = 5000;
 
   /// @dev The percentage of each sale that gets paid out to the referrer as commission.
   uint256 public constant PERCENT_COMMISSION = 10;
@@ -100,6 +100,13 @@ contract StrikersReferral is StrikersWhitelist {
     freeReferralPacksClaimed++;
     hasClaimedFreeReferralPack[msg.sender] = true;
     _buyPack(standardSale);
+  }
+
+  /// @dev Allows the contract owner to manually set the referrer for a given user, in case this wasn't properly attributed.
+  /// @param _for The user we want to set the referrer for.
+  /// @param _referrer The user who will now get credit for _for's future purchases.
+  function setReferrer(address _for, address _referrer) external onlyOwner {
+    referrers[_for] = _referrer;
   }
 
   /// @dev Allows a user to withdraw the referral commission they are owed.

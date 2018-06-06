@@ -1,19 +1,19 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 import "./StrikersMinting.sol";
-import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 
 /// @title StrikersTrading - Allows users to trustlessly trade cards.
 /// @author The CryptoStrikers Team
-contract StrikersTrading is StrikersMinting, Pausable {
+contract StrikersTrading is StrikersMinting {
 
   /// @dev Emitting this allows us to look up if a trade has been
-  ///   successfully filled, by who, and with which card.
+  ///   successfully filled, by who, and which cards were involved.
   event TradeFilled(
     bytes32 indexed tradeHash,
     address indexed maker,
-    address taker,
-    uint256 submittedCardId
+    uint256 makerCardId,
+    address indexed taker,
+    uint256 takerCardId
   );
 
   /// @dev Emitting this allows us to look up if a trade has been cancelled.
@@ -35,8 +35,8 @@ contract StrikersTrading is StrikersMinting, Pausable {
   /// @param _maker Address of the maker (i.e. trade creator).
   /// @param _makerCardId ID of the card the maker has agreed to give up.
   /// @param _taker The counterparty the maker wishes to trade with (if it's address(0), anybody can fill the trade!)
-  /// @param _takerCardOrChecklistId If taker is the 0-address, then this is a checklist ID (e.g. "any Lionel Messi").
-  ///                                If not, then it's a card ID (e.g. "Lionel Messi #8/100").
+  /// @param _takerCardOrChecklistId If taker is the 0-address, then this is a checklist ID (e.g. "any Originals John Smith").
+  ///                                If not, then it's a card ID (e.g. "Originals John Smith #8/100").
   /// @param _salt A uint256 timestamp to differentiate trades that have otherwise identical params (prevents replay attacks).
   /// @param _submittedCardId The card the taker is using to fill the trade. Must satisfy either the card or checklist ID
   ///                         specified in _takerCardOrChecklistId.
@@ -59,10 +59,11 @@ contract StrikersTrading is StrikersMinting, Pausable {
     require(_maker != msg.sender, "You can't fill your own trade.");
     require(_taker == address(0) || _taker == msg.sender, "You are not authorized to fill this trade.");
 
-    // More readable than a ternary operator?
     if (_taker == address(0)) {
+      // This trade is open to the public so we are requesting a checklistItem, rather than a specific card.
       require(cards[_submittedCardId].checklistId == _takerCardOrChecklistId, "The card you submitted is not valid for this trade.");
     } else {
+      // We are trading directly with another user and are requesting a specific card.
       require(_submittedCardId == _takerCardOrChecklistId, "The card you submitted is not valid for this trade.");
     }
 
@@ -75,7 +76,7 @@ contract StrikersTrading is StrikersMinting, Pausable {
     );
 
     require(tradeStates[tradeHash] == TradeState.Valid, "This trade is no longer valid.");
-    require(isValidSignature(_maker, tradeHash, _v, _r, _s), "Invalid signature");
+    require(isValidSignature(_maker, tradeHash, _v, _r, _s), "Invalid signature.");
 
     tradeStates[tradeHash] = TradeState.Filled;
 
@@ -87,7 +88,7 @@ contract StrikersTrading is StrikersMinting, Pausable {
     safeTransferFrom(_maker, msg.sender, _makerCardId);
     safeTransferFrom(msg.sender, _maker, _submittedCardId);
 
-    emit TradeFilled(tradeHash, _maker, msg.sender, _submittedCardId);
+    emit TradeFilled(tradeHash, _maker, _makerCardId, msg.sender, _submittedCardId);
   }
 
   /// @dev Allows the maker to cancel a trade that hasn't been filled yet.

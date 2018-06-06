@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 /// @title An optional contract that allows us to associate metadata to our cards.
 /// @author The CryptoStrikers Team

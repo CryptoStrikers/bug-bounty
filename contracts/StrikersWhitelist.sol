@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 import "./StrikersPackSaleInternal.sol";
 
@@ -12,9 +12,9 @@ contract StrikersWhitelist is StrikersPackSaleInternal {
   /// @dev Emit this whenever someone gets a pack using their whitelist allocation.
   event WhitelistAllocationUsed(address indexed user, bool premium);
 
-  /// @dev We can only give away a maximum of 5000 Standard packs, and 500 Premium packs.
+  /// @dev We can only give away a maximum of 1000 Standard packs, and 500 Premium packs.
   uint16[2] public whitelistLimits = [
-    5000, // Standard
+    1000, // Standard
     500 // Premium
   ];
 

@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 import "./StrikersMinting.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";

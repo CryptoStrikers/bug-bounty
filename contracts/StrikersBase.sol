@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 import "openzeppelin-solidity/contracts/token/ERC721/ERC721Token.sol";
 import "./StrikersChecklist.sol";
@@ -13,14 +13,16 @@ contract StrikersBase is ERC721Token("CryptoStrikers", "STRK") {
   /// @dev The struct representing the game's main object, a sports trading card.
   struct Card {
     // The timestamp at which this card was minted.
-    uint64 mintTime;
+    // With uint32 we are good until 2106, by which point we will have not minted
+    // a card in like, 88 years.
+    uint32 mintTime;
 
     // The checklist item represented by this card. See StrikersChecklist.sol for more info.
     uint8 checklistId;
 
     // Cards for a given player have a serial number, which gets
-    // incremented in sequence. If we mint 1000 Messis, the third one
-    // to be minted has serialNumber = 3 (out of 1000, for example).
+    // incremented in sequence. For example, if we mint 1000 of a card,
+    // the third one to be minted has serialNumber = 3 (out of 1000).
     uint16 serialNumber;
   }
 
@@ -29,8 +31,10 @@ contract StrikersBase is ERC721Token("CryptoStrikers", "STRK") {
   /// @dev All the cards that have been minted, indexed by cardId.
   Card[] public cards;
 
-  /// @dev Keeps track of how many cards we have minted for a given checklist ID
-  ///   to make sure we don't go over the limit for that checklistItem.
+  /// @dev Keeps track of how many cards we have minted for a given checklist item
+  ///   to make sure we don't go over the limit for it.
+  ///   NB: uint16 has a capacity of 65,535, but we are not minting more than
+  ///   4,352 of any given checklist item.
   mapping (uint8 => uint16) public mintedCountForChecklistId;
 
   /// @dev A reference to our checklist contract, which contains all the minting limits.
@@ -70,7 +74,7 @@ contract StrikersBase is ERC721Token("CryptoStrikers", "STRK") {
     require(mintLimit == 0 || mintedCountForChecklistId[_checklistId] < mintLimit, "Can't mint any more of this card!");
     uint16 serialNumber = ++mintedCountForChecklistId[_checklistId];
     Card memory newCard = Card({
-      mintTime: uint64(now),
+      mintTime: uint32(now),
       checklistId: _checklistId,
       serialNumber: serialNumber
     });

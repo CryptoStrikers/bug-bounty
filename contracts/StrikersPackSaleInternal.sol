@@ -1,4 +1,4 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 import "./StrikersPackFactory.sol";
 
@@ -18,6 +18,7 @@ contract StrikersPackSaleInternal is StrikersPackFactory {
   /// @dev Function shared by all 3 ways of buying a pack (ETH, kitty burn, whitelist).
   /// @param _sale The sale we are buying from.
   function _buyPack(PackSale storage _sale) internal whenNotPaused {
+    require(msg.sender == tx.origin, "Only EOAs are allowed to buy from the pack sale.");
     require(_sale.packs.length > 0, "The sale has no packs available for sale.");
     uint32 pack = _removeRandomPack(_sale.packs);
     uint256[] memory cards = _mintCards(pack);

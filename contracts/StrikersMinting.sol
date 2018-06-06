@@ -1,11 +1,11 @@
-pragma solidity ^0.4.24;
+pragma solidity 0.4.24;
 
 import "./StrikersBase.sol";
-import "openzeppelin-solidity/contracts/ownership/Ownable.sol";
+import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 
 /// @title The contract that exposes minting functions to the outside world and limits who can call them.
 /// @author The CryptoStrikers Team
-contract StrikersMinting is StrikersBase, Ownable {
+contract StrikersMinting is StrikersBase, Pausable {
 
   /// @dev Emit this when we decide to no longer mint a given checklist ID.
   event PulledFromCirculation(uint8 checklistId);
@@ -41,6 +41,8 @@ contract StrikersMinting is StrikersBase, Ownable {
     _mintCard(_checklistId, _owner);
   }
 
+  /// @dev Allows the owner or the pack sale contract to prevent an Iconic or Unreleased card from ever being minted again.
+  /// @param _checklistId The Iconic or Unreleased card we want to remove from circulation.
   function pullFromCirculation(uint8 _checklistId) external {
     bool ownerOrPackSale = (msg.sender == owner) || (msg.sender == packSaleAddress);
     require(ownerOrPackSale, "Only the owner or pack sale can take checklist items out of circulation.");
