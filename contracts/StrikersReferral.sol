@@ -92,14 +92,26 @@ contract StrikersReferral is StrikersWhitelist {
 
   /// @dev A user who was referred to CryptoStrikers can call this once to claim their free pack (must have bought a pack first).
   function claimFreeReferralPack() external {
-    address referrer = referrers[msg.sender];
-    require(referrer != address(0), "You haven't attributed your referrer using buyFirstPackFromReferral().");
-    require(packsBought[referrer] > 0, "To avoid abuse, the person who referred you must also have bought a pack.");
-    require(!hasClaimedFreeReferralPack[msg.sender], "You have already claimed your free referral pack!");
+    require(isOwedFreeReferralPack(msg.sender), "You are not eligible for a free referral pack.");
     require(freeReferralPacksClaimed < MAX_FREE_REFERRAL_PACKS, "We've already given away all the free referral packs...");
     freeReferralPacksClaimed++;
     hasClaimedFreeReferralPack[msg.sender] = true;
     _buyPack(standardSale);
+  }
+
+  /// @dev Checks whether or not a given user is eligible for a free referral pack.
+  /// @param _addr The address of the user we are inquiring about.
+  /// @return True if user can call claimFreeReferralPack(), false otherwise.
+  function isOwedFreeReferralPack(address _addr) public view returns (bool) {
+    // _addr will only have a referrer if they've already bought a pack (see buyFirstPackFromReferral())
+    address referrer = referrers[_addr];
+
+    // To prevent abuse, require that the referrer has bought at least one pack.
+    // Guaranteed to evaluate to false if referrer is address(0), so don't even check for that.
+    bool referrerHasBoughtPack = packsBought[referrer] > 0;
+
+    // Lastly, check to make sure _addr hasn't already claimed a free pack.
+    return referrerHasBoughtPack && !hasClaimedFreeReferralPack(_addr);
   }
 
   /// @dev Allows the contract owner to manually set the referrer for a given user, in case this wasn't properly attributed.
